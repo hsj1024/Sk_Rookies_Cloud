@@ -28,5 +28,8 @@ public class DatabaseRunner implements ApplicationRunner {
             log.info("DB URL = {}", metaData.getURL());
             log.info("DB Username = {}", metaData.getUserName());
         }
+
+        log.info("=== Arguments 정보 <===");
+        args.getOptionNames().forEach(System.out::println);
     }
 }
