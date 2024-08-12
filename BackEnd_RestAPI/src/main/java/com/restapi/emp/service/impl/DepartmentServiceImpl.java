@@ -38,12 +38,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 //        Department department = optional.orElseThrow(
 //                () -> new ResourceNotFoundException("Department is not exists with a given id: " + departmentId) );
 
+        Department department = EmpDeptCommon.getDepartment(departmentId, departmentRepository);
+        return DepartmentMapper.mapToDepartmentDto(department);
+    }
+
+    private Department getDepartment(Long departmentId) {
         String errMsg = String.format("Department is not exists with a given id: %s", departmentId);
-        Department department = departmentRepository.findById(departmentId)
+        return departmentRepository.findById(departmentId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(errMsg, HttpStatus.NOT_FOUND)
                 );
-        return DepartmentMapper.mapToDepartmentDto(department);
     }
 
     @Transactional(readOnly = true)
@@ -61,13 +65,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDto updateDepartment(Long departmentId, DepartmentDto updatedDepartment) {
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Department is not exists with a given id:"+ departmentId)
-                );
+        Department department = getDepartment(departmentId);
         //Dirty Check - setter method 호출
-        department.setDepartmentName(updatedDepartment.getDepartmentName());
-        department.setDepartmentDescription(updatedDepartment.getDepartmentDescription());
+        if (updatedDepartment.getDepartmentName() != null)
+            department.setDepartmentName(updatedDepartment.getDepartmentName());
+        if (updatedDepartment.getDepartmentDescription() != null)
+            department.setDepartmentDescription(updatedDepartment.getDepartmentDescription());
 
         //Department savedDepartment = departmentRepository.save(department);
 
@@ -76,11 +79,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void deleteDepartment(Long departmentId) {
-        departmentRepository.findById(departmentId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Department is not exists with a given id: " + departmentId)
-                );
+        Department department = getDepartment(departmentId);
 
-        departmentRepository.deleteById(departmentId);
+        departmentRepository.delete(department);
     }
 }
