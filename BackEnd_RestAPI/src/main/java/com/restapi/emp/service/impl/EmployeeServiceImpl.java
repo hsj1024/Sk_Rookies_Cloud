@@ -4,12 +4,10 @@ import com.restapi.emp.dto.EmployeeDto;
 import com.restapi.emp.dto.mapper.EmployeeMapper;
 import com.restapi.emp.entity.Department;
 import com.restapi.emp.entity.Employee;
-import com.restapi.emp.exception.ResourceNotFoundException;
 import com.restapi.emp.repository.DepartmentRepository;
 import com.restapi.emp.repository.EmployeeRepository;
 import com.restapi.emp.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,12 +88,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(Long employeeId) {
 
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Employee is not exists with given id: " + employeeId,
-                        HttpStatus.NOT_FOUND)
-                );
+        Employee employee = EmpDeptCommon.getEmployee(employeeId, employeeRepository);
+//                employeeRepository.findById(employeeId)
+//                .orElseThrow(() -> new ResourceNotFoundException(
+//                        "Employee is not exists with given id: " + employeeId,
+//                        HttpStatus.NOT_FOUND)
+//        );
 
-        employeeRepository.deleteById(employeeId);
+        employeeRepository.delete(employee);
     }
 }

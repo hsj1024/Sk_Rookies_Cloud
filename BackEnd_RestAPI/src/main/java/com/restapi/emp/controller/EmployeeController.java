@@ -19,12 +19,12 @@ public class EmployeeController {
 
     // Build Add Employee REST API
     @PostMapping
-    public ResponseEntity<?> createEmployee(@RequestBody @Valid EmployeeDto employeeDto),
-                                            Error errors){
-        if(errors.hasErrors()){
-            return  ResponseEntity.badRequest().build();
-        }
-
+    public ResponseEntity<?> createEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
+//                                            Errors errors){
+//        if(errors.hasErrors()){
+//            //400 Bad Request
+//            return ResponseEntity.badRequest().body(errors);
+//        }
         EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
@@ -53,8 +53,8 @@ public class EmployeeController {
     @PutMapping("{id}")
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeId,
                                                       @RequestBody EmployeeDto updatedEmployee){
-          EmployeeDto employeeDto = employeeService.updateEmployee(employeeId, updatedEmployee);
-          return ResponseEntity.ok(employeeDto);
+        EmployeeDto employeeDto = employeeService.updateEmployee(employeeId, updatedEmployee);
+        return ResponseEntity.ok(employeeDto);
     }
 
     // Build Delete Employee REST API
