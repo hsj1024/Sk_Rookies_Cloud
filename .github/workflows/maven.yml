@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_IMAGE: springbootreactjs
-  DOCKER_TAG: 0.1
+  DOCKER_TAG: 0.2
 
 jobs:
   build:
@@ -24,7 +24,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn clean package -Dmaven.test.skip=true
+        run: |
+          cd BackEnd_RestAPI
+          mvn clean package -Dmaven.test.skip=true
 
       - name: Build & push Docker image
         uses: mr-smithers-excellent/docker-build-push@v6
